@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @EnableAutoConfiguration
-@ComponentScan(basePackages={"com.liyan.model"})//添加的注解
+@ComponentScan(basePackages={"com.youxiu326.model"})//添加的注解
 public class UserController {
 
     @Autowired
