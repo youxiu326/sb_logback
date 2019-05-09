@@ -50,4 +50,10 @@ public class UserController {
         return user;
     }
 
+    @RequestMapping(value = "byZore",method = RequestMethod.GET)
+    public String byZore() throws Exception {
+        userService.byZero();
+        return "byZore";
+    }
+
 }

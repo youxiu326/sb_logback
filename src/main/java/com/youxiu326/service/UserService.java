@@ -14,4 +14,6 @@ public interface UserService {
      */
     public User selectUser(String userId);
 
+    public void byZero();
+
 }
