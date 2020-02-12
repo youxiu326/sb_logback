@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	scan : 配置文件如果发生改变，将会重新加载，默认值为true
+	scanPeriod : 检测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位时毫秒，
+	当scan为true时，这个属性生效，默认时间间隔为1min。
+ -->
+<configuration scan="true" scanPeriod="60 seconds">
+
+	<!-- 1.日志添加到控制台  -->
+    <appender name ="console_out" class="ch.qos.logback.core.ConsoleAppender">
+       <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 大于或者等于INFO级别 -->
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%d %p (%file:%line\)- %m%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    
+    <!-- 2.日志添加到文件 -->
+    <!-- <appender name="file_out" class="ch.qos.logback.core.FileAppender"></appender> -->
+ 
+    <!-- 3.滚动纪录文件，先将日志记录到指定文件，当符合某种条件时，将日志记录到其他文件  -->
+    <appender name="rolling_file_out" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    
+        <file>logs/log.log</file>
+    
+        <!-- 设置滚动策略 -->
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+	        <!--设置日志命名模式--> 
+	        <fileNamePattern>logs/log-%d{yyyy-MM-dd}.log</fileNamePattern>
+	        
+	        <!--最多保留30天log-->
+	        <maxHistory>30</maxHistory>
+	    </rollingPolicy>
+	    
+	    <!-- 超过100MB时，触发滚动策略 -->
+	    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+	        <maxFileSize>100MB</maxFileSize>
+	    </triggeringPolicy>
+	    <encoder>  
+         <pattern>%date %level [%thread] %logger{36} [%file : %line] %msg%n</pattern>  
+        </encoder> 
+    </appender>
+	
+	<!-- 单独记录ERROR级别的日志 -->
+	<appender name="error_file_out" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    
+        <file>logs/error/error.log</file>
+    
+        <!-- 设置滚动策略 -->
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+	        <!--设置日志命名模式--> 
+	        <fileNamePattern>logs/error/error-%d{yyyy-MM-dd}.log</fileNamePattern>
+	        
+	        <!--最多保留30天log-->
+	        <maxHistory>30</maxHistory>
+	    </rollingPolicy>
+	    
+	    <!-- 超过100MB时，触发滚动策略 -->
+	    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+	        <maxFileSize>50MB</maxFileSize>
+	    </triggeringPolicy>
+	    
+	    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 大于或者等于ERROR级别 -->
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>  
+         <pattern>%date %level [%thread] %logger{36} [%file : %line] %msg%n</pattern>  
+        </encoder> 
+    </appender> 
+	
+	<!-- <logger></logger> -->
+	
+	<!-- ERROR > WARN > INFO > DEBUG > TRACE -->
+	<root level="INFO">
+		<appender-ref ref="console_out"/>
+        <appender-ref ref="rolling_file_out"/>
+        <appender-ref ref="error_file_out"/>
+	</root>
+
+</configuration>
